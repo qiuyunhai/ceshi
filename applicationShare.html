@@ -1,0 +1,167 @@
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title>Hello MUI</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<link rel="stylesheet" type="text/css" href="css/mui.min.css" />
+		<link rel="stylesheet" type="text/css" href="css/iconfont.css" />
+		<link href="css/mui.poppicker.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="css/mui.picker.min.css" />
+		<style>
+			.mui-input-group .mui-input-row:after{
+				left:0
+			}
+		</style>
+	</head>
+
+	<body class="mui-ios mui-ios-10 mui-ios-10-3" id="applyS">
+		<header class="mui-bar mui-bar-nav" style="background: #00ccff;">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left" style="color: white;"></a>
+			<h1 class="mui-title" style="color: white;">车位共享申请</h1>
+		</header>
+		<div class="mui-content">
+			<form class="mui-input-group">
+				<div class="mui-input-row">
+					<label>选择区域</label>
+					<input type="text" id='showCityPicker3' class="mui-input-clear" placeholder="请输选择区域">
+				</div>
+				<div class="mui-input-row">
+					<label>选择小区</label>
+					<select name="xiaoqu">
+						<option value="">恒大华府</option>
+						<option value="">康桥美郡</option>
+						<option value="">泰山公馆</option>
+					</select>
+				</div>
+				<div class="mui-input-row">
+					<label>业主姓名</label>
+					<input type="text" class="mui-input-clear" placeholder="请输入业主姓名">
+				</div>
+				<div class="mui-input-row">
+					<label>上传身份证 : </label>
+				</div>
+				<div class="mui-input-row">
+					<label>身份证正面</label>
+					<button type="button" class="mui-btn mui-btn-outlined upload" style="float: none;padding: 8px;margin-top: 3px;">上传</button>
+					<input type="file" class=" mui-hidden" style="margin-top: 5px;">
+				</div>
+				<div class="mui-input-row" style="height: 150px;text-align: center;">
+					<img src="" alt="" />
+				</div>
+				<div class="mui-input-row">
+					<label>身份证反面</label>
+					<button type="button" class="mui-btn mui-btn-outlined upload" style="float: none;padding: 8px;margin-top: 3px;">上传</button>
+					<input type="file" class=" mui-hidden" style="margin-top: 5px;">
+				</div>
+				<div class="mui-input-row" style="height: 150px;text-align: center;">
+					<img src="" alt="" />
+				</div>
+				<div class="mui-input-row">
+					<label>业主姓名</label>
+					<input type="text" class="mui-input-clear" placeholder="请输入用户名">
+				</div>
+				<div class="mui-input-row">
+					<label>业主手机号</label>
+					<input type="text" class="mui-input-clear" placeholder="请输入业主手机号">
+				</div>
+				<div class="mui-input-row">
+					<label style="width: 36%;">车位证明文件</label>
+					<button type="button" class="mui-btn mui-btn-outlined upload" style="float: none;padding: 8px;margin-top: 3px;">上传</button>
+					<input type="file" class=" mui-hidden" style="margin-top: 5px;width: 64%;">
+				</div>
+				<div class="mui-input-row" style="height: 150px;text-align: center;">
+					<img src="" alt="" />
+				</div>
+				<div class="mui-input-row">
+					<label>车位有效期</label>
+					<input type="text" id='result' data-options='{"type":"date"}' class="mui-input-clear time" placeholder="请输入车位有效期">
+				</div>
+				<div class="mui-button-row">
+					<button type="button" class="mui-btn mui-btn-primary">提交</button>
+				</div>
+			</form>
+		</div>
+
+		<script src="js/jquery-3.2.1.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/mui.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/mui.picker.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/mui.poppicker.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/city.data-3.js" type="text/javascript" charset="utf-8"></script>
+		<script>
+			(function($, doc) {
+				$.init();
+				$.ready(function() {
+					var _getParam = function(obj, param) {
+						return obj[param] || '';
+					};
+					//普通示例
+					var cityPicker3 = new $.PopPicker({
+						layer: 3
+					});
+					cityPicker3.setData(cityData3);
+					var showCityPickerButton = doc.getElementById('showCityPicker3');
+					showCityPickerButton.addEventListener('tap', function(event) {
+						cityPicker3.show(function(items) {
+							showCityPickerButton.value = "" + _getParam(items[0], 'text') + " " + _getParam(items[1], 'text') + " " + _getParam(items[2], 'text');
+						});
+					}, false);
+				});
+				//时间选择
+				var result = $('#result')[0];
+				var btns = $('.time');
+				btns.each(function(i, btn) {
+					btn.addEventListener('tap', function() {
+						var _self = this;
+						if(_self.picker) {
+							_self.picker.show(function(rs) {
+								result.innerText = '选择结果: ' + rs.text;
+								_self.picker.dispose();
+								_self.picker = null;
+							});
+						} else {
+							var optionsJson = this.getAttribute('data-options') || '{}';
+							var options = JSON.parse(optionsJson);
+							var id = this.getAttribute('id');
+							_self.picker = new $.DtPicker(options);
+							_self.picker.show(function(rs) {
+								result.value = '' + rs.text;
+								_self.picker.dispose();
+								_self.picker = null;
+							});
+						}
+
+					}, false);
+				});
+					
+				
+			})(mui, document);
+			$("body").on("click",".upload",function(){
+					$(this).next().get(0).click()
+			})
+			$("body").on("change",".mui-hidden",function(){
+				console.log($(this).parent().next().find("img"))
+				
+				previewImage($(this).get(0),$(this).parent().next().find("img"))
+			})
+			function previewImage(file,obj) {
+				if(file.files && file.files[0]) {
+					var reader = new FileReader();
+					reader.onload = function(evt) {
+						$(obj).attr("src",evt.target.result).css({
+							width:"95%",
+							height:"150px",
+							border: "1px solid gray",
+							"borderRadius": "5px"
+						})
+//						img.src = evt.target.result;
+					}
+					reader.readAsDataURL(file.files[0]);
+				} 
+			}
+		</script>
+	</body>
+
+</html>
